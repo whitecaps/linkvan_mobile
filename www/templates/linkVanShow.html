@@ -1,0 +1,74 @@
+<ion-view title="LinkVan Show">
+    <ion-content overflow-scroll="true" padding="true" class="has-header">
+        <form class="list">
+            <label class="item item-input" name="Search">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="search" placeholder="Search Facilities">
+            </label>
+        </form>
+        <h3>{{facility.name}}</h3>
+        <form class="list"></form>
+        <div class="list card">
+            <div class="item item-divider">Welcomes</div>
+            <div class="item item-body">{{facility.welcomes}}</div>
+        </div>
+        <div class="list card">
+            <div class="item item-divider">Services</div>
+            <div class="item item-body">{{facility.services}}</div>
+        </div>
+
+        <div ng-click="goDirections()">
+          <div id="map" data-tap-disabled="true" style="width: 100%; height: 250px"></div>
+        </div>
+
+        <div class="list card">
+            <div class="item item-divider">Contact Information</div>
+            <div class="item item-body">
+              Call: {{facility.phone}}<br>
+              Website:
+              <a ng-href="http://{{facility.website}}">
+                {{facility.website}}
+              </a>
+            </div>
+        </div>
+        <div class="list card">
+            <div class="item item-divider">Hours</div>
+            <div class="item item-body">
+              <table>
+                <tr>
+                  <td style="padding-right: 5px">Mon:</td>
+                  <td>{{mon}}<td>
+                </tr>
+                <tr>
+                  <td>Tue:</td>
+                  <td>{{tues}}<td>
+                </tr>
+                <tr>
+                  <td>Wed:</td>
+                  <td>{{wed}}<td>
+                </tr>
+                <tr>
+                  <td>Thu:</td>
+                  <td>{{thurs}}<td>
+                </tr>
+                <tr>
+                  <td>Fri:</td>
+                  <td>{{fri}}<td>
+                </tr>
+                <tr>
+                  <td>Sat:</td>
+                  <td>{{sat}}<td>
+                </tr>
+                <tr>
+                  <td>Sun:</td>
+                  <td>{{sun}}<td>
+                </tr>
+              </table>
+            </div>
+        </div>
+        <div class="list card">
+            <div class="item item-divider">Notes</div>
+            <div class="item item-body">{{facility.notes}}</div>
+        </div>
+    </ion-content>
+</ion-view>
