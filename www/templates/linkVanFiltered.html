@@ -7,7 +7,7 @@
             </label>
             <div class="spacer" style="width: 283px; height: 17px;"></div>
             <ion-item class="item-divider">Filter Options</ion-item>
-            <ion-toggle ng-repeat="item in settingsList" ng-model="item.checked" ng-checked="item.checked" ng-change="toggleChange()">
+            <ion-toggle collection-repeat="item in settingsList" ng-model="item.checked" ng-checked="item.checked" ng-change="toggleChange()">
               {{ item.text }}
             </ion-toggle>
         </form>

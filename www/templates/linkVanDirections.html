@@ -7,12 +7,7 @@
           <div class="input-label">
             Mode of Travel
           </div>
-          <select name="mode" ng-model="travelList.selected" ng-change="changeTravel()">
-            <option value="WALKING">WALKING</option>
-            <option value="TRANSIT">TRANSIT</option>
-            <option value="BICYCLE">BICYCLE</option>
-            <option value="DRIVING">DRIVING</option>
-          </select>
+          <select ng-model="travel" ng-options="t.text for t in travelList" ng-change="changeTravel(travel.text)"></select>
         </label>
 
       </div>

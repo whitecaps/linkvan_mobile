@@ -391,44 +391,23 @@ angular.module('app.controllers', [])
     }
     });
 
-
-
     $scope.travelList = [
-      { text: "Walking", selected: false },
-      { text: "Transit", selected: false },
-      { text: "Bicycle", selected: false },
-      { text: "Driving", selected: false }
+      { text: "WALKING", selected: true },
+      { text: "TRANSIT", selected: false },
+      { text: "BICYCLING", selected: false },
+      { text: "DRIVING", selected: false }
     ];
+    $scope.travel = $scope.travelList[0];
 
-    calcRoute();
+    calcRoute($scope.travelList[0].text);
 
-    function calcRoute(){
+    function calcRoute(travel){
       var zoom = $scope.map.getZoom();
-      var selectedMode;
-
-      var walking = $scope.travelList[0].selected;
-      var transit = $scope.travelList[1].selected;
-      var bicycle = $scope.travelList[2].selected;
-      var driving = $scope.travelList[3].selected;
-
-      if(walking){
-        selectedMode = $scope.travelList[0].text;
-      }else if(transit){
-        selectedMode = $scope.travelList[1].text;
-      }else if(bicycle){
-        selectedMode = $scope.travelList[2].text;
-      }else{
-        selectedMode = $scope.travelList[3].text;
-      }
-
-      console.log("selectedMode = " + selectedMode);
-      console.log("start = " + start);
-      console.log("end = " + end);
 
       var request = {
           origin: start,
           destination: end,
-          travelMode: google.maps.TravelMode[selectedMode.toUpperCase()]
+          travelMode: google.maps.TravelMode[travel]
       };
       console.log("request = " + request.travelMode);
       directionsService.route(request, function(response, status) {
@@ -441,29 +420,9 @@ angular.module('app.controllers', [])
 
     }
 
-
-
-
-    $scope.changeTravel = function(){
-      var walking = $scope.travelList[0].selected;
-      var transit = $scope.travelList[1].selected;
-      var bicycle = $scope.travelList[2].selected;
-      var driving = $scope.travelList[3].selected;
-      console.log("walking = " + walking);
-        console.log("transit = " + transit);
-          console.log("bicycle = " + bicycle);
-            console.log("driving = " + driving);
-
-
-      if(walking){
-        console.log("walking selected");
-      }else if(transit){
-        console.log("transit selected");
-      }else if(bicycle){
-        console.log("bicycle selected");
-      }else{
-        console.log("driving selected");
-      }
+    $scope.changeTravel = function(travel){
+      console.log("calling calcRoute with " + travel);
+        calcRoute(travel);
     }
 
     $ionicLoading.hide();
@@ -473,15 +432,11 @@ angular.module('app.controllers', [])
     });*/
 
     //FIX DR. PETE HOURS
-
+    //need to refresh for map to load
     if(refreshCount==0){
         window.location = "#/directions?name=" + name + "&lat=" + flat + "&long=" + flong+ "&r=1";
         location.reload();
     }
-
-
-
-
 
 
   }, function(error){
