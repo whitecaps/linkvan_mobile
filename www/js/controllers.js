@@ -422,7 +422,7 @@ angular.module('app.controllers', [])
 
     $scope.changeTravel = function(travel){
       console.log("calling calcRoute with " + travel);
-        calcRoute(travel);
+      calcRoute(travel);
     }
 
     $ionicLoading.hide();
