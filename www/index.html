@@ -34,14 +34,64 @@
 
   </head>
   <body ng-app="app" animation="slide-left-right-ios7">
-  
+
+
   <div>
     <div>
-        <ion-nav-bar class="bar-positive">
-            <ion-nav-back-button class="button-icon icon ion-ios-arrow-back">Back</ion-nav-back-button>
-        </ion-nav-bar>
-        <ion-nav-view></ion-nav-view>
+      <ion-side-menus enable-menu-with-back-views="true">
+  <ion-side-menu-content>
+      <ion-nav-bar class="bar-positive nav-title-slide-ios7">
+          <ion-nav-back-button></ion-nav-back-button>
+
+          <ion-nav-buttons side="right">
+              <button class="button button-icon button-clear ion-navicon" menu-toggle="right">
+              </button>
+          </ion-nav-buttons>
+      </ion-nav-bar>
+      <ion-nav-view></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="right" width=200 is-enabled=true>
+      <ion-content>
+          <ion-list>
+            <ion-item nav-clear menu-close href="#/home" class="item item-icon-right" >
+                 <i class="icon ion-ios7-ionic-outline"></i>App
+             </ion-item>
+             <ion-item nav-clear menu-close href="#/about" class="item item-icon-right" >
+                  <i class="icon ion-ios7-ionic-outline"></i>About Us
+              </ion-item>
+             <ion-item nav-clear menu-close href="#/disclaimer" class="item item-icon-right" >
+                  <i class="icon ion-ios7-help"></i>Disclaimer
+              </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-side-menu>
+    </ion-side-menus>
     </div>
 </div>
+
+<script id="contact-modal.html" type="text/ng-template">
+  <div class="modal">
+    <ion-header-bar>
+      <h1 class="title">Edit Contact</h1>
+    </ion-header-bar>
+    <ion-content>
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Name</span>
+          <input type="text" ng-model="contact.name">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Info</span>
+          <input type="text" ng-model="contact.info">
+        </label>
+      </div>
+
+      <button class="button button-full button-energized" ng-click="closeModal()">Done</button>
+    </ion-content>
+  </div>
+</script>
+
+
   </body>
 </html>

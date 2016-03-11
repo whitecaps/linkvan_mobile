@@ -1,7 +1,6 @@
 angular.module('app.controllers', [])
 
 .controller('linkVanHomeCtrl', function($scope) {
-
 })
 
 .controller('linkVanFilteredCtrl', function($scope, $state, $cordovaGeolocation, $location, $http, $ionicLoading) {
@@ -116,8 +115,8 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('linkVanShowCtrl', function($scope, $state, $cordovaGeolocation, $location, $http, $ionicLoading) {
-  var options = {timeout: 10000, enableHighAccuracy: true};
+.controller('linkVanShowCtrl', function($scope, $state, $cordovaGeolocation, $location, $http, $ionicLoading, $ionicHistory, $rootScope) {
+
   var id = $location.search().id;
   var BASE = "https://linkvan.herokuapp.com/api/facilities/";
 
@@ -288,19 +287,27 @@ angular.module('app.controllers', [])
   };
 
   $scope.goDirections = function(){
-    window.location = "#/directions?name=" + $scope.facility.name + "&lat=" + $scope.facility.lat + "&long=" + $scope.facility.long + "&r=0";
+    $rootScope.directionsRefresh = 0;
+    window.location = "#/directions?id=" + $scope.facility.id + "&name=" + $scope.facility.name + "&lat=" + $scope.facility.lat + "&long=" + $scope.facility.long + "&r=0";
   }
 
 
 
 }) //end of show controller
 
-.controller('linkVanDirectionsCtrl', function($scope, $location, $ionicLoading, $cordovaGeolocation) {
+.controller('linkVanDirectionsCtrl', function($http, $rootScope, $scope, $location, $ionicLoading, $cordovaGeolocation, $state, $ionicHistory) {
+  var options = {timeout: 10000, enableHighAccuracy: true};
+  var id = $location.search().id;
   var name = $location.search().name;
   var flat = $location.search().lat;
   var flong = $location.search().long;
   var refreshCount = $location.search().r;
   var ulat, ulong;
+
+  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+    viewData.enableBack = true;
+  });
+
   $ionicLoading.show({
     template: 'loading directions'
   });
@@ -317,19 +324,14 @@ angular.module('app.controllers', [])
     var saller = new google.maps.LatLng(49.283799, -123.096927);
     var oppenheimer = new google.maps.LatLng(49.2827075, -123.0954157);
     var raycam = new google.maps.LatLng(49.281415, -123.083726);
+
+    //YO HOST THESE ASSETS
     var landmark = 'https://linkvan.herokuapp.com/assets/blue_dot-389fca422ef93e351134817e9c5b67d4.png';
     var woodwardslandmark = 'https://linkvan.herokuapp.com/assets/woodward_marker-1496bd72f1b6cfe8285091f21f445279.png';
     var carnegielandmark = 'https://linkvan.herokuapp.com/assets/carnegie_marker-d0cc46c1b6eaf99e478071e993a3a256.png';
     var sallerlandmark = 'https://linkvan.herokuapp.com/assets/saller_marker-3b815fb050847f188c99866ab696f1a8.png';
     var oppenheimerlandmark = 'https://linkvan.herokuapp.com/assets/oppenheimer_marker-2f34ab471c89ca261f7d9949312e342d.png';
     var raycamlandmark = 'https://linkvan.herokuapp.com/assets/raycam_marker-3a80591adfb60c88a00f6eea0ac5bd2e.png';
-
-
-    var latLng = new google.maps.LatLng(ulat, ulong);
-
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-
 
     directionsDisplay = new google.maps.DirectionsRenderer();
     start = new google.maps.LatLng(ulat, ulong);
@@ -339,7 +341,8 @@ angular.module('app.controllers', [])
       zoom: 14,
       center: start
     };
-    $scope.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+    $scope.map = new google.maps.Map(document.getElementById('map2'), mapOptions);
 
     woodwardsmarker = new google.maps.Marker({
       position: woodwards,
@@ -397,13 +400,13 @@ angular.module('app.controllers', [])
       { text: "BICYCLING", selected: false },
       { text: "DRIVING", selected: false }
     ];
-    $scope.travel = $scope.travelList[0];
+    $scope.travel = $scope.travelList[0].text;
 
-    calcRoute($scope.travelList[0].text);
+    calcRoute($scope.travel);
+
+    console.log("zoom level = " + $scope.map.getZoom());
 
     function calcRoute(travel){
-      var zoom = $scope.map.getZoom();
-
       var request = {
           origin: start,
           destination: end,
@@ -413,11 +416,10 @@ angular.module('app.controllers', [])
       directionsService.route(request, function(response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
           directionsDisplay.setDirections(response);
+          //$scope.map.fitBounds(new google.maps.LatLngBounds(start, end));
         }
       });
-
       directionsDisplay.setMap($scope.map);
-
     }
 
     $scope.changeTravel = function(travel){
@@ -426,17 +428,11 @@ angular.module('app.controllers', [])
     }
 
     $ionicLoading.hide();
-/*
-    $scope.$on( "$ionicView.enter", function( scopes, states ) {
-          google.maps.event.trigger( $scope.map, 'resize' );
-    });*/
+
 
     //FIX DR. PETE HOURS
-    //need to refresh for map to load
-    if(refreshCount==0){
-        window.location = "#/directions?name=" + name + "&lat=" + flat + "&long=" + flong+ "&r=1";
-        location.reload();
-    }
+    //need to refresh for map to load -- done! $scope.map needs to get map2
+    //fix centering after route displayed
 
 
   }, function(error){

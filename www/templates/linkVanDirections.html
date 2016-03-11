@@ -1,17 +1,12 @@
-<ion-view title="LinkVan Directions">
+<ion-view title="Directions">
     <ion-content overflow-scroll="true" padding="false" scroll="false" class="has-header">
-
       <div class="list">
-
         <label class="item item-input item-select">
           <div class="input-label">
             Mode of Travel
           </div>
           <select ng-model="travel" ng-options="t.text for t in travelList" ng-change="changeTravel(travel.text)"></select>
         </label>
-
-      </div>
-
-    <div id="map" data-tap-disabled="true" style="width: 100%; height: 100%"0></div>
+      <div id="map2" data-tap-disabled="true" style="width: 100%; height: 1280px"></div>
     </ion-content>
 </ion-view>
