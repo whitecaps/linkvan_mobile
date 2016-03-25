@@ -15,7 +15,7 @@
 
         <ion-list>
           <div ng-repeat="facility in facilitiesdisplayed">
-            <ion-item ng-href="#/show?id={{facility.id}}">{{facility.name}} ({{facility.distance}}) : {{facility.services}}</ion-item>
+            <ion-item ng-href="#/show?id={{facility.id}}">{{facility.name}} ({{facility.distance}}) km <br>{{facility.services}}<i class="icon ion-chevron-right icon-accessory chevron-index"></i></ion-item>
           </div>
         </ion-list>
     </ion-content>

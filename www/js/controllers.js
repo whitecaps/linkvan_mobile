@@ -1,9 +1,87 @@
 angular.module('app.controllers', [])
 
-.controller('linkVanHomeCtrl', function($scope) {
+.controller('linkVanHomeCtrl', function($scope, facilityService, $ionicPopup, ConnectivityMonitor, $ionicPlatform, $http) {
+    var BASE = "https://linkvan.herokuapp.com/api/getchanges?localid=";
+    var BASETEST = "http://localhost:3000/api/getchanges?localid=";
+    var OK = 42; //success code
+
+     //need to check if ready first before using cordova plugins
+     $ionicPlatform.ready(function() {
+       //ConnectivityMonitor.startWatching(); !!!research use
+       if(ConnectivityMonitor.isOffline()) {
+
+      /*   $ionicPopup.confirm({
+           title: 'No Internet Connection',
+           content: 'Sorry, no Internet connectivity detected. Please reconnect and try again.'
+         })
+         .then(function(result) {
+           if(!result) {
+             //ionic.Platform.exitApp();
+             console.log('cancelled');
+           }
+         }); */
+
+         console.log("OFFLINE");
+       }else{
+         //change to BASE in prod
+         $http.get(BASETEST + facilityService.getCurrentVersion()).then(function(resp) {
+           //var tempObj = {"id":3,"name":"EBITEN","welcomes":"Men","services":"Food","lat":"49.2792033","long":"-123.0993036","address":"612 Main St, Vancouver, BC","phone":"23235235","website":"asaf.com","description":null,"notes":"fdsaf","created_at":"2016-03-15T23:25:43.399Z","updated_at":"2016-03-16T00:00:05.018Z","startsmon_at":"2000-01-01T15:25:00.000Z","endsmon_at":"2000-01-01T15:25:00.000Z","startstues_at":"2000-01-01T15:25:00.000Z","endstues_at":"2000-01-01T15:25:00.000Z","startswed_at":"2000-01-01T15:25:00.000Z","endswed_at":"2000-01-01T15:25:00.000Z","startsthurs_at":"2000-01-01T15:25:00.000Z","endsthurs_at":"2000-01-01T15:25:00.000Z","startsfri_at":"2000-01-01T15:25:00.000Z","endsfri_at":"2000-01-01T15:25:00.000Z","startssat_at":"2000-01-01T15:25:00.000Z","endssat_at":"2000-01-01T15:25:00.000Z","startssun_at":"2000-01-01T15:25:00.000Z","endssun_at":"2000-01-01T15:25:00.000Z","suitability":"Children","r_pets":false,"r_id":false,"r_cart":false,"r_phone":false,"r_wifi":false,"startsmon_at2":"2000-01-01T15:25:00.000Z","endsmon_at2":"2000-01-01T15:25:00.000Z","startstues_at2":"2000-01-01T15:25:00.000Z","endstues_at2":"2000-01-01T15:25:00.000Z","startswed_at2":"2000-01-01T15:25:00.000Z","endswed_at2":"2000-01-01T15:25:00.000Z","startsthurs_at2":"2000-01-01T15:25:00.000Z","endsthurs_at2":"2000-01-01T15:25:00.000Z","startsfri_at2":"2000-01-01T15:25:00.000Z","endsfri_at2":"2000-01-01T15:25:00.000Z","startssat_at2":"2000-01-01T15:25:00.000Z","endssat_at2":"2000-01-01T15:25:00.000Z","startssun_at2":"2000-01-01T15:25:00.000Z","endssun_at2":"2000-01-01T15:25:00.000Z","open_all_day_mon":true,"open_all_day_tues":true,"open_all_day_wed":true,"open_all_day_thurs":true,"open_all_day_fri":true,"open_all_day_sat":true,"open_all_day_sun":true,"closed_all_day_mon":false,"closed_all_day_tues":false,"closed_all_day_wed":false,"closed_all_day_thurs":false,"closed_all_day_fri":false,"closed_all_day_sat":false,"closed_all_day_sun":false,"second_time_mon":false,"second_time_tues":false,"second_time_wed":false,"second_time_thurs":false,"second_time_fri":false,"second_time_sat":false,"second_time_sun":false,"user_id":null};
+           var respObj = resp.data;
+           if(respObj != OK){
+             //if there are changes
+             for(var i=0; i<Object.keys(respObj).length; i++){
+               var key = Object.keys(respObj)[i];
+               var value = respObj[key];
+               var fid = Object.keys(value)[0];
+               var fvalue = value[fid];
+
+               //set last key to new local current version
+               if(i == Object.keys(respObj).length - 1){
+                 facilityService.setCurrentVersion(key);
+               }
+
+               if(fvalue == "D"){
+                 facilityService.destroyFacility(fid);
+               }else{
+                 facilityService.createOrUpdateFacility(fid, fvalue);
+               }
+
+             }//end for loop
+
+           }
+
+         }), function(err) {
+           console.error('HTTP ERR', err);
+         // err.status will contain the status code
+         }; //end of $http.get...
+
+
+         console.log("ONLINE");
+       }
+
+     });
+
+
+ //end connectivity check
+
+
+
+  $scope.getCategory = function(category){
+    facilityService.setServiceArr(category);
+  }
+
 })
 
-.controller('linkVanFilteredCtrl', function($scope, $state, $cordovaGeolocation, $location, $http, $ionicLoading) {
+.controller('linkVanFilteredCtrl', function($scope, $state, $cordovaGeolocation, $location, $http, $ionicLoading, facilityService) {
+
+  console.log(facilityService.getNearYes());
+
+  console.log(facilityService.getNearNo());
+
+  console.log(facilityService.getNameYes());
+
+  console.log(facilityService.getNameNo());
+
   $ionicLoading.show({
     template: 'finding facilities'
   });
@@ -39,7 +117,7 @@ angular.module('app.controllers', [])
       for(var i=0; i<nearyes.length; i++){
         $scope.nearyesfinal.push({
             name: nearyes[i].name,
-            distance: nearyesdistances[i],
+            distance: nearyesdistances[i].toFixed(2),
             services: nearyes[i].services,
             id: nearyes[i].id
         });
@@ -48,7 +126,7 @@ angular.module('app.controllers', [])
       for(var i=0; i<nearno.length; i++){
         $scope.nearnofinal.push({
             name: nearno[i].name,
-            distance: nearnodistances[i],
+            distance: nearnodistances[i].toFixed(2),
             services: nearno[i].services,
             id: nearno[i].id
         });
@@ -57,7 +135,7 @@ angular.module('app.controllers', [])
       for(var i=0; i<nameyes.length; i++){
         $scope.nameyesfinal.push({
             name: nameyes[i].name,
-            distance: nameyesdistances[i],
+            distance: nameyesdistances[i].toFixed(2),
             services: nameyes[i].services,
             id: nameyes[i].id
         });
@@ -66,7 +144,7 @@ angular.module('app.controllers', [])
       for(var i=0; i<nameno.length; i++){
         $scope.namenofinal.push({
             name: nameno[i].name,
-            distance: namenodistances[i],
+            distance: namenodistances[i].toFixed(2),
             services: nameno[i].services,
             id: nameno[i].id
         });
@@ -115,7 +193,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('linkVanShowCtrl', function($scope, $state, $cordovaGeolocation, $location, $http, $ionicLoading, $ionicHistory, $rootScope) {
+.controller('linkVanShowCtrl', function($scope, $state, $cordovaGeolocation, $location, $http, $ionicLoading, $ionicHistory) {
 
   var id = $location.search().id;
   var BASE = "https://linkvan.herokuapp.com/api/facilities/";
@@ -287,26 +365,20 @@ angular.module('app.controllers', [])
   };
 
   $scope.goDirections = function(){
-    $rootScope.directionsRefresh = 0;
-    window.location = "#/directions?id=" + $scope.facility.id + "&name=" + $scope.facility.name + "&lat=" + $scope.facility.lat + "&long=" + $scope.facility.long + "&r=0";
+    window.location = "#/directions?id=" + $scope.facility.id + "&name=" + $scope.facility.name + "&lat=" + $scope.facility.lat + "&long=" + $scope.facility.long;
   }
 
 
 
 }) //end of show controller
 
-.controller('linkVanDirectionsCtrl', function($http, $rootScope, $scope, $location, $ionicLoading, $cordovaGeolocation, $state, $ionicHistory) {
+.controller('linkVanDirectionsCtrl', function($http, $scope, $location, $ionicLoading, $cordovaGeolocation, $state, $ionicHistory) {
   var options = {timeout: 10000, enableHighAccuracy: true};
   var id = $location.search().id;
   var name = $location.search().name;
   var flat = $location.search().lat;
   var flong = $location.search().long;
-  var refreshCount = $location.search().r;
   var ulat, ulong;
-
-  $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-    viewData.enableBack = true;
-  });
 
   $ionicLoading.show({
     template: 'loading directions'
@@ -316,9 +388,8 @@ angular.module('app.controllers', [])
     ulat = position.coords.latitude;
     ulong = position.coords.longitude;
 
-    var directionsDisplay;
+    var directionsDisplay, start, end;
     var directionsService = new google.maps.DirectionsService();
-    var start, end;
     var woodwards = new google.maps.LatLng(49.2825437, -123.1085684);
     var carnegie = new google.maps.LatLng(49.280966, -123.099672);
     var saller = new google.maps.LatLng(49.283799, -123.096927);
@@ -400,9 +471,11 @@ angular.module('app.controllers', [])
       { text: "BICYCLING", selected: false },
       { text: "DRIVING", selected: false }
     ];
-    $scope.travel = $scope.travelList[0].text;
 
-    calcRoute($scope.travel);
+    //define below so first menu option shows WALKING instead of empty
+    $scope.travel = $scope.travelList[0];
+
+    calcRoute($scope.travel.text);
 
     console.log("zoom level = " + $scope.map.getZoom());
 
@@ -438,16 +511,6 @@ angular.module('app.controllers', [])
   }, function(error){
     console.log("Could not get location");
   })
-
-
-
-
-
-
-
-
-
-
 
 })
 
