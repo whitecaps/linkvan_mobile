@@ -23,10 +23,10 @@ angular.module('app.controllers', [])
 
          console.log("OFFLINE");
        }else{
-         //change to BASE in prod
+         //!!!change from BASETEST to BASE in prod
          $http.get(BASETEST + facilityService.getCurrentVersion()).then(function(resp) {
-           //var tempObj = {"id":3,"name":"EBITEN","welcomes":"Men","services":"Food","lat":"49.2792033","long":"-123.0993036","address":"612 Main St, Vancouver, BC","phone":"23235235","website":"asaf.com","description":null,"notes":"fdsaf","created_at":"2016-03-15T23:25:43.399Z","updated_at":"2016-03-16T00:00:05.018Z","startsmon_at":"2000-01-01T15:25:00.000Z","endsmon_at":"2000-01-01T15:25:00.000Z","startstues_at":"2000-01-01T15:25:00.000Z","endstues_at":"2000-01-01T15:25:00.000Z","startswed_at":"2000-01-01T15:25:00.000Z","endswed_at":"2000-01-01T15:25:00.000Z","startsthurs_at":"2000-01-01T15:25:00.000Z","endsthurs_at":"2000-01-01T15:25:00.000Z","startsfri_at":"2000-01-01T15:25:00.000Z","endsfri_at":"2000-01-01T15:25:00.000Z","startssat_at":"2000-01-01T15:25:00.000Z","endssat_at":"2000-01-01T15:25:00.000Z","startssun_at":"2000-01-01T15:25:00.000Z","endssun_at":"2000-01-01T15:25:00.000Z","suitability":"Children","r_pets":false,"r_id":false,"r_cart":false,"r_phone":false,"r_wifi":false,"startsmon_at2":"2000-01-01T15:25:00.000Z","endsmon_at2":"2000-01-01T15:25:00.000Z","startstues_at2":"2000-01-01T15:25:00.000Z","endstues_at2":"2000-01-01T15:25:00.000Z","startswed_at2":"2000-01-01T15:25:00.000Z","endswed_at2":"2000-01-01T15:25:00.000Z","startsthurs_at2":"2000-01-01T15:25:00.000Z","endsthurs_at2":"2000-01-01T15:25:00.000Z","startsfri_at2":"2000-01-01T15:25:00.000Z","endsfri_at2":"2000-01-01T15:25:00.000Z","startssat_at2":"2000-01-01T15:25:00.000Z","endssat_at2":"2000-01-01T15:25:00.000Z","startssun_at2":"2000-01-01T15:25:00.000Z","endssun_at2":"2000-01-01T15:25:00.000Z","open_all_day_mon":true,"open_all_day_tues":true,"open_all_day_wed":true,"open_all_day_thurs":true,"open_all_day_fri":true,"open_all_day_sat":true,"open_all_day_sun":true,"closed_all_day_mon":false,"closed_all_day_tues":false,"closed_all_day_wed":false,"closed_all_day_thurs":false,"closed_all_day_fri":false,"closed_all_day_sat":false,"closed_all_day_sun":false,"second_time_mon":false,"second_time_tues":false,"second_time_wed":false,"second_time_thurs":false,"second_time_fri":false,"second_time_sat":false,"second_time_sun":false,"user_id":null};
            var respObj = resp.data;
+
            if(respObj != OK){
              //if there are changes
              for(var i=0; i<Object.keys(respObj).length; i++){
@@ -45,26 +45,15 @@ angular.module('app.controllers', [])
                }else{
                  facilityService.createOrUpdateFacility(fid, fvalue);
                }
-
              }//end for loop
-
            }
-
          }), function(err) {
            console.error('HTTP ERR', err);
          // err.status will contain the status code
          }; //end of $http.get...
-
-
          console.log("ONLINE");
        }
-
-     });
-
-
- //end connectivity check
-
-
+     }); //end connectivity check
 
   $scope.getCategory = function(category){
     facilityService.setServiceArr(category);
